@@ -4,13 +4,14 @@ import com.dmdev.dto.CreateSubscriptionDto;
 import com.dmdev.entity.Provider;
 import com.dmdev.entity.Status;
 import com.dmdev.entity.Subscription;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class CreateSubscriptionMapperTest {
 
@@ -36,6 +37,6 @@ class CreateSubscriptionMapperTest {
                 .expirationDate(Instant.now().plus(Duration.ofDays(10)).truncatedTo(ChronoUnit.DAYS))
                 .build();
 
-        Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+        assertThat(actualResult).isEqualTo(expectedResult);
     }
 }

@@ -17,7 +17,7 @@ class ProviderTest {
 
         var actualResult = Provider.findByName(provider);
 
-        assertThat(actualResult.equals(Provider.APPLE));
+        assertThat(actualResult).isEqualTo(Provider.APPLE);
     }
 
     @Test

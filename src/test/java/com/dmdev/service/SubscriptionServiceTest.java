@@ -133,8 +133,16 @@ class SubscriptionServiceTest {
         @DisplayName("Subscription is expired successfully")
         void expireSuccess() {
             var subscription = getSubscription();
-            var expiredSubscription = Subscription.builder().id(1).userId(22).name("Andrey").provider(Provider.GOOGLE).status(Status.EXPIRED).expirationDate(Instant.now(clock)).build();
+            var expiredSubscription = Subscription.builder()
+                    .id(1)
+                    .userId(22)
+                    .name("Andrey")
+                    .provider(Provider.GOOGLE)
+                    .status(Status.EXPIRED)
+                    .expirationDate(Instant.now(clock))
+                    .build();
             doReturn(Optional.of(subscription)).when(subscriptionDao).findById(subscription.getId());
+
             subscriptionService.expire(subscription.getId());
 
             assertThat(expiredSubscription).isEqualTo(subscription);
