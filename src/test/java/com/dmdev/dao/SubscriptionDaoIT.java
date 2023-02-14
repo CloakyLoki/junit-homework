@@ -22,9 +22,9 @@ class SubscriptionDaoIT extends IntegrationTestBase {
 
     @Test
     void findAll() {
-        var sub1 = subscriptionDao.insert(getSubscription(1, "Andrey"));
-        var sub2 = subscriptionDao.insert(getSubscription(2, "Anna"));
-        var sub3 = subscriptionDao.insert(getSubscription(3, "Kira"));
+        var subscription1 = subscriptionDao.insert(getSubscription(1, "Andrey"));
+        var subscription2 = subscriptionDao.insert(getSubscription(2, "Anna"));
+        var subscription3 = subscriptionDao.insert(getSubscription(3, "Kira"));
 
         var actualResult = subscriptionDao.findAll();
 
@@ -32,7 +32,7 @@ class SubscriptionDaoIT extends IntegrationTestBase {
         var subscriptions = actualResult.stream()
                 .map(Subscription::getId)
                 .toList();
-        assertThat(subscriptions).contains(sub1.getId(), sub2.getId(), sub3.getId());
+        assertThat(subscriptions).contains(subscription1.getId(), subscription2.getId(), subscription3.getId());
     }
 
     @Test
@@ -43,28 +43,6 @@ class SubscriptionDaoIT extends IntegrationTestBase {
 
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get()).isEqualTo(subscription);
-    }
-
-    @Nested
-    class DeleteTest {
-
-        @Test
-        void deleteExistingSubscription() {
-            var subscription = subscriptionDao.insert(getSubscription(1, "Andrey"));
-
-            var actualResult = subscriptionDao.delete(subscription.getId());
-
-            assertTrue(actualResult);
-        }
-
-        @Test
-        void deleteNotExistingSubscription() {
-            subscriptionDao.insert(getSubscription(1, "Andrey"));
-
-            var actualResult = subscriptionDao.delete(999);
-
-            assertFalse(actualResult);
-        }
     }
 
     @Test
@@ -115,5 +93,27 @@ class SubscriptionDaoIT extends IntegrationTestBase {
                 .status(Status.ACTIVE)
                 .expirationDate(Instant.now().plus(Duration.ofDays(10)).truncatedTo(ChronoUnit.DAYS))
                 .build();
+    }
+
+    @Nested
+    class DeleteTest {
+
+        @Test
+        void deleteExistingSubscription() {
+            var subscription = subscriptionDao.insert(getSubscription(1, "Andrey"));
+
+            var actualResult = subscriptionDao.delete(subscription.getId());
+
+            assertTrue(actualResult);
+        }
+
+        @Test
+        void deleteNotExistingSubscription() {
+            subscriptionDao.insert(getSubscription(1, "Andrey"));
+
+            var actualResult = subscriptionDao.delete(9999999);
+
+            assertFalse(actualResult);
+        }
     }
 }

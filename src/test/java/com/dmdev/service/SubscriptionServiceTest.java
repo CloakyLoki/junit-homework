@@ -11,7 +11,6 @@ import com.dmdev.mapper.CreateSubscriptionMapper;
 import com.dmdev.validator.CreateSubscriptionValidator;
 import com.dmdev.validator.Error;
 import com.dmdev.validator.ValidationResult;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,13 +27,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SubscriptionServiceTest {
@@ -91,7 +87,16 @@ class SubscriptionServiceTest {
         @DisplayName("Subscription is cancelled successfully")
         void cancelSuccess() {
             var subscription = getSubscription();
-            var cancelledSubscription = Subscription.builder().id(1).userId(22).name("Andrey").provider(Provider.GOOGLE).status(Status.CANCELED).expirationDate(Instant.now().plus(Duration.ofDays(10)).truncatedTo(ChronoUnit.DAYS)).build();
+            var cancelledSubscription = Subscription.builder()
+                    .id(1)
+                    .userId(22)
+                    .name("Andrey")
+                    .provider(Provider.GOOGLE)
+                    .status(Status.CANCELED)
+                    .expirationDate(Instant.now()
+                            .plus(Duration.ofDays(10))
+                            .truncatedTo(ChronoUnit.DAYS))
+                    .build();
             doReturn(Optional.of(subscription)).when(subscriptionDao).findById(subscription.getId());
 
             subscriptionService.cancel(subscription.getId());
@@ -104,6 +109,7 @@ class SubscriptionServiceTest {
         @DisplayName("Throws SubscriptionException if subscription status is not ACTIVE")
         void shouldThrowSubscriptionExceptionExceptionIfSubscriptionNotActive() {
             var subscription = getSubscription();
+
             subscription.setStatus(Status.CANCELED);
             doReturn(Optional.of(subscription)).when(subscriptionDao).findById(subscription.getId());
 
